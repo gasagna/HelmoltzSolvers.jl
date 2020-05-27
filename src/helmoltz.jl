@@ -11,7 +11,7 @@ mutable struct HelmoltzSolver{T, P, Q<:QuasiTridiagonal, V<:Vector{T}}
     u::V  #
     function HelmoltzSolver(P::Int, ::Type{T}=Float64) where {T}
         # only available for an even number of expansion coefficients
-        isodd(P) || throw(ArgumentError("invalid size P"))
+        isodd(P) || throw(ArgumentError("P must be odd: got $P"))
 
         # this is the size of the problems to be solved
         M = div(P+1, 2)
