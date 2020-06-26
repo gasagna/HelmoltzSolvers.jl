@@ -35,7 +35,8 @@ using PyPlot; pygui(true)
     h = CoupledHelmoltzSolver(P)
 
     # and update coefficients
-    solve!(h, (1, 2, 3, 4), r)
+    update!(h, (1, 2, 3, 4))
+    solve!(h,  r)
     r[0] *= 2
 
     @test norm(FFTW.r2r(r.data/2, FFTW.REDFT00) .- sol.(y)) < 1e-14

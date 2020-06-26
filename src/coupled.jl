@@ -22,20 +22,21 @@ struct CoupledHelmoltzSolver{T, P, H<:HelmoltzSolver{T, P}, C<:ChebCoeffs{T, P}}
     end
 end
 
-function solve!(solver::CoupledHelmoltzSolver{T, P},
-                    θs::NTuple{4, Real},
-                     r::ChebCoeffs{T, P}) where {T, P}
-
+function update!(solver::CoupledHelmoltzSolver, θs::NTuple{4, Real})
     # expand coeffs
     θ₀, θ₁, θ₂, θ₃ = θs
 
-    # aliases for the partial solutions
-    vₚ, v₊, v₋ = solver.vₛ
-
-    # update quasi-tridiagonal solvers with coefficients
-    # this also trigger the UL factorisation of the systems
+    # update the quasi-tridiagonal solvers with coefficients
+    # this also triggers the UL factorisation of the systems
     update!(solver.hu, θ₀, θ₁)
     update!(solver.hv, θ₂, θ₃)
+
+    return nothing
+end
+
+function solve!(solver::CoupledHelmoltzSolver{T, P}, r::ChebCoeffs{T, P}) where {T, P}
+    # aliases for the partial solutions
+    vₚ, v₊, v₋ = solver.vₛ
 
     # `vₚ` and will be overwritten with the solution of the inhomogeneous
     # B problem and eventually with the full solution `v`.
